@@ -1,0 +1,21 @@
+# model_check.py
+import numpy as np
+import tensorflow as tf
+ 
+from tensorflow.keras.preprocessing import image
+from tensorflow.keras.applications.resnet50 import preprocess_input, decode_predictions
+ 
+# load model
+model = tf.keras.models.load_model('resnet50_saved_model')
+ 
+for i in range(4):
+  img_path = './data/img{}.jpg'.format(i)
+  img = image.load_img(img_path, target_size=(224, 224))
+  x = image.img_to_array(img)
+  x = np.expand_dims(x, axis=0)
+  x = preprocess_input(x)
+ 
+  # prediction
+  preds = model.predict(x)
+ 
+  print('{} - Predicted: {}'.format(img_path, decode_predictions(preds, top=3)[0]))
